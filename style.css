@@ -84,7 +84,7 @@ body {
     font-size: 14px;
     font-weight: bold;
     color: #d32f2f;
-    text-decoration: underline;
+    /* Removed text-decoration: underline */
     margin-bottom: 5px;
 }
 
@@ -107,6 +107,8 @@ body {
 .field-cell.full-width {
     width: 100%;
 }
+
+/* Combined fields styling */
 
 .field-number {
     font-weight: bold;
@@ -173,6 +175,31 @@ body {
     border-bottom: 1px solid #000;
     width: 150px;
     margin-left: 10px;
+    min-height: 20px;
+    padding: 2px 5px;
+}
+
+.signature-line-small.editable {
+    background-color: #fff3cd;
+    cursor: text;
+}
+
+.signature-line-small.editable:hover {
+    background-color: #ffeaa7;
+}
+
+.signature-line-small.editable:focus {
+    background-color: #e3f2fd;
+    outline: 2px solid #2196f3;
+    outline-offset: 1px;
+}
+
+.signature-line-small.editable:empty:before {
+    content: "Click to edit";
+    color: #999;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 10px;
 }
 
 .school-seal {
@@ -181,14 +208,14 @@ body {
 }
 
 .seal-circle {
-    width: 80px;
-    height: 80px;
+    width: 140px;
+    height: 100px;
     border: 2px solid #000;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
 }
 
@@ -261,6 +288,10 @@ body {
         padding: 5px;
     }
 
+    .field-box {
+        padding: 5px;
+    }
+
     .print-btn {
         position: static;
         margin-bottom: 15px;
@@ -274,12 +305,19 @@ body {
     }
 }
 
-/* Print Styles */
+/* Print Styles - Single Page Layout */
 @media print {
     body {
         background: white;
         padding: 0;
-        font-size: 11px;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.2;
+    }
+
+    .page-header {
+        margin-bottom: 10px;
+        font-size: 9px;
     }
 
     .certificate-container {
@@ -287,7 +325,10 @@ body {
         box-shadow: none;
         max-width: none;
         margin: 0;
-        padding: 15px;
+        padding: 10px;
+        page-break-inside: avoid;
+        transform: scale(0.95);
+        transform-origin: top left;
     }
 
     .print-btn {
@@ -296,6 +337,8 @@ body {
 
     .editable {
         background-color: transparent;
+        border-bottom: none !important;
+        text-decoration: none !important;
     }
 
     .editable:focus {
@@ -306,25 +349,143 @@ body {
         content: "";
     }
 
-    .page-header {
-        margin-bottom: 15px;
+    /* Remove underlines from field values in print */
+    .field-value {
+        border-bottom: none !important;
+        text-decoration: none !important;
+        font-weight: bold;
     }
 
-    .footer-url {
-        margin-top: 15px;
+    /* Compact header */
+    .header-info {
+        margin-bottom: 8px;
+        font-size: 9px;
     }
 
-    /* Ensure proper page breaks */
-    .certificate-container {
-        page-break-inside: avoid;
+    .school-header {
+        padding-bottom: 8px;
+        margin-bottom: 5px;
+        border-bottom: none !important;
+        /* Remove border in print */
     }
 
+    .school-name {
+        font-size: 14px;
+        margin-bottom: 1px;
+    }
+
+    .school-name-sub {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+
+    .school-address {
+        font-size: 9px;
+        margin-bottom: 5px;
+    }
+
+    .certificate-title {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+
+    /* Compact table */
     .certificate-table {
-        page-break-inside: avoid;
+        font-size: 9px;
+        margin-bottom: 5px;
     }
 
     .field-cell {
+        padding: 4px;
+        line-height: 1.1;
+        vertical-align: top;
+    }
+
+    .field-number {
+        font-size: 9px;
+    }
+
+    .field-value {
+        font-size: 9px;
+        min-width: 60px;
+        padding: 0 2px;
+    }
+
+    /* Compact signature section */
+    .signature-section {
+        padding: 8px;
+        min-height: 120px;
+        margin-top: 5px;
+        border: none !important;
+        /* Remove border in print */
+    }
+
+    .signature-row {
+        margin-bottom: 8px;
+        font-size: 9px;
+    }
+
+    .signature-line-small {
+        width: 120px;
+        margin-left: 5px;
+    }
+
+    .seal-circle {
+        width: 120px;
+        height: 85px;
+        font-size: 11px;
+    }
+
+    .signature-space {
+        height: 40px;
+        margin-top: 10px;
+    }
+
+    .footer-url {
+        margin-top: 8px;
+        font-size: 8px;
+    }
+
+    /* Force single page */
+    * {
         page-break-inside: avoid;
+    }
+
+    .certificate-container * {
+        page-break-before: avoid;
+        page-break-after: avoid;
+    }
+
+    /* Ensure no page breaks */
+    @page {
+        margin: 0.5in;
+        size: A4;
+    }
+
+    html,
+    body {
+        height: auto;
+        overflow: visible;
+    }
+
+    /* Ensure no underlines or borders on any editable content */
+    .field-value,
+    .editable,
+    input,
+    span[contenteditable] {
+        border-bottom: none !important;
+        text-decoration: none !important;
+        border: none !important;
+        outline: none !important;
+    }
+
+    .signature-line-small.editable {
+        background-color: transparent;
+        border-bottom: 1px solid #000 !important;
+    }
+
+    .signature-line-small.editable:empty:before {
+        content: "";
     }
 }
 
@@ -377,4 +538,22 @@ body {
 /* Kannada text styling */
 .field-cell {
     font-family: "Times New Roman", "Noto Sans Kannada", serif;
+}
+
+/* Prevent blank first page */
+.page-header {
+    page-break-before: avoid;
+}
+
+.certificate-container {
+    page-break-before: avoid;
+}
+
+/* Ensure content starts immediately */
+body {
+    page-break-before: avoid;
+}
+
+* {
+    box-sizing: border-box;
 }
