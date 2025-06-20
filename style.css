@@ -122,6 +122,13 @@ body {
     font-weight: bold;
 }
 
+/* TC Info and School Code specific styling */
+.tc-info .field-value,
+.school-code .field-value {
+    color: #28a745;
+    /* Green color for TC No, Academic year, and School Code */
+}
+
 .editable {
     background-color: #fff3cd;
     cursor: text;
