@@ -8,7 +8,7 @@ body {
     font-family: "Times New Roman", serif;
     background-color: #f5f5f5;
     padding: 20px;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 /* Page Header */
@@ -642,4 +642,22 @@ body {
 
 * {
     box-sizing: border-box;
+}
+
+.field-value {
+    display: inline-block;
+    /* Allows margin to apply properly */
+    margin-top: 5px;
+    /* Controls gap above the value */
+    margin-bottom: 1px;
+    /* Very small gap below the value */
+    line-height: 1.2;
+    /* Tighter line spacing if needed */
+}
+
+@media print {
+    .field-value {
+        margin-top: 6px;
+        margin-bottom: 0;
+    }
 }
