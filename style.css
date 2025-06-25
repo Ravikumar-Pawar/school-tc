@@ -15,17 +15,23 @@ body {
 .page-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
     font-size: 11px;
     color: #333;
+    position: relative;
 }
 
 .timestamp {
     font-weight: normal;
+    flex: 0 0 auto;
 }
 
 .page-title {
     font-weight: normal;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .certificate-container {
@@ -306,6 +312,11 @@ body {
         text-align: center;
         gap: 5px;
     }
+
+    .page-title {
+        position: static;
+        transform: none;
+    }
 }
 
 /* Print Styles - Single Page Layout */
@@ -364,6 +375,22 @@ body {
         margin-bottom: 6px;
         /* Reduced from 8px */
         font-size: 9px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+
+    .timestamp {
+        font-weight: normal;
+        flex: 0 0 auto;
+    }
+
+    .page-title {
+        font-weight: normal;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .certificate-container {
