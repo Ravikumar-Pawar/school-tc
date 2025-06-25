@@ -8,8 +8,6 @@ class CertificateManager {
   init() {
     this.loadSavedData()
     this.attachEventListeners()
-    this.setupFieldInteractions()
-    this.setupTableNavigation()
     this.updateTimestamp()
   }
 
@@ -67,41 +65,8 @@ class CertificateManager {
     })
   }
 
-  // Setup field interaction effects
-  setupFieldInteractions() {
-    this.editableFields.forEach((field) => {
-      field.addEventListener("mouseenter", () => {
-        if (!field.matches(":focus")) {
-          field.style.transform = "scale(1.01)"
-        }
-      })
-
-      field.addEventListener("mouseleave", () => {
-        if (!field.matches(":focus")) {
-          field.style.transform = "scale(1)"
-        }
-      })
-    })
-  }
-
-  // Setup table navigation
-  setupTableNavigation() {
-    const cells = document.querySelectorAll(".field-cell")
-    cells.forEach((cell) => {
-      cell.addEventListener("click", (e) => {
-        const editableField = cell.querySelector(".editable")
-        if (editableField && e.target !== editableField) {
-          editableField.focus()
-        }
-      })
-    })
-  }
-
   // Handle field focus
   onFieldFocus(field) {
-    field.classList.add("editing")
-    field.style.transform = "scale(1)"
-
     // Clear placeholder text
     if (field.textContent === "Click to edit") {
       field.textContent = ""
@@ -115,9 +80,6 @@ class CertificateManager {
 
   // Handle field blur
   onFieldBlur(field) {
-    field.classList.remove("editing")
-    field.style.transform = "scale(1)"
-
     // Trim whitespace
     field.textContent = field.textContent.trim()
   }
@@ -197,160 +159,99 @@ class CertificateManager {
     link.download = `certificate_${data.tcNumber || "data"}.json`
     link.click()
   }
-
-  // Validate certificate data
-  validateData() {
-    const errors = []
-
-    // Check required fields
-    const requiredFields = [
-      { selector: ".tc-info .field-value", name: "TC Number" },
-      { selector: ".school-code .field-value", name: "School Code" },
-    ]
-
-    requiredFields.forEach((field) => {
-      const element = document.querySelector(field.selector)
-      if (!element || !element.textContent.trim()) {
-        errors.push(`${field.name} is required`)
-      }
-    })
-
-    // Validate editable fields
-    this.editableFields.forEach((field, index) => {
-      const value = field.textContent.trim()
-      const cell = field.closest(".field-cell")
-      const fieldNumber = cell?.querySelector(".field-number")?.textContent || `Field ${index + 1}`
-
-      // Validate date fields
-      if (fieldNumber.includes("Date") || fieldNumber.includes("ದಿನಾಂಕ")) {
-        if (value && !this.isValidDate(value)) {
-          errors.push(`${fieldNumber} has invalid date format`)
-        }
-      }
-
-      // Validate numeric fields
-      if (fieldNumber.includes("No.") || fieldNumber.includes("days") || fieldNumber.includes("ದಿನಗಳ")) {
-        if (value && isNaN(value) && !value.includes("/") && !value.includes("-")) {
-          errors.push(`${fieldNumber} should be numeric`)
-        }
-      }
-    })
-
-    return errors
-  }
-
-  // Check if date is valid
-  isValidDate(dateString) {
-    const dateFormats = [
-      /^\d{2}[-/]\d{2}[-/]\d{4}$/, // DD/MM/YYYY or DD-MM-YYYY
-      /^\d{2}[-/][A-Za-z]{3}[-/]\d{4}$/, // DD-MMM-YYYY
-      /^\d{1,2}[-/]\d{1,2}[-/]\d{4}$/, // D/M/YYYY
-      /^\d{2}-[A-Z]{3}-\d{4}$/, // DD-JAN-YYYY
-    ]
-
-    return dateFormats.some((format) => format.test(dateString))
-  }
-
-  // Generate certificate ID
-  generateCertificateId() {
-    const now = new Date()
-    const year = now.getFullYear().toString().substr(-2)
-    const month = (now.getMonth() + 1).toString().padStart(2, "0")
-    const day = now.getDate().toString().padStart(2, "0")
-    const random = Math.random().toString(36).substr(2, 6).toUpperCase()
-
-    return `${year}${month}${day}${random}`
-  }
-
-  // Auto-fill some fields with sample data
-  fillSampleData() {
-    const sampleData = {
-      0: "", // Admission No
-      1: "237831658", // Cumulative Record No
-      2: "05-Jun-2023", // Date of Admission
-      3: "SANGEETA PRAKASH WALIAKAR", // Student Name
-      4: "PRAKASH WALIAKAR", // Father Name
-      5: "NIRMALA", // Mother Name
-      6: "02-JAN-2017", // Date of Birth
-      7: "16-Jun-2025", // Last attendance
-      8: "16/06/2025", // Application date
-      9: "3", // Class
-    }
-
-    Object.keys(sampleData).forEach((index) => {
-      if (this.editableFields[index]) {
-        this.editableFields[index].textContent = sampleData[index]
-        this.saveFieldData(this.editableFields[index], Number.parseInt(index))
-      }
-    })
-  }
 }
 
 // Enhanced Print functionality for single page
 function printCertificate() {
-  // Validate data before printing
-  const manager = new CertificateManager()
-  const errors = manager.validateData()
+  // Simply trigger the browser's print dialog
+  window.print()
+}
 
-  if (errors.length > 0) {
-    const proceed = confirm(
-      `Found ${errors.length} validation errors:\n${errors.join("\n")}\n\nDo you want to print anyway?`,
-    )
-    if (!proceed) return
+// PDF Download functionality - Simple and reliable
+function downloadPDF() {
+  // Show loading indicator
+  const downloadBtn = document.querySelector(".download-btn")
+  const originalText = downloadBtn.textContent
+  downloadBtn.textContent = "📄 Generating PDF..."
+  downloadBtn.disabled = true
+
+  // Get the certificate container
+  const element = document.querySelector(".certificate-container")
+
+  // Get TC number for filename
+  const tcNumber = document.querySelector(".tc-info .field-value")?.textContent || "certificate"
+
+  // Simple PDF options that work reliably
+  const opt = {
+    margin: [10, 10, 10, 10], // 10mm margins
+    filename: `Transfer_Certificate_${tcNumber.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`,
+    image: {
+      type: "jpeg",
+      quality: 0.98,
+    },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      logging: false,
+    },
+    jsPDF: {
+      unit: "mm",
+      format: "a4",
+      orientation: "portrait",
+    },
   }
 
-  // Prepare for printing
-  const editableFields = document.querySelectorAll(".editable")
-  const originalStyles = []
-
-  // Store original styles and prepare for print
-  editableFields.forEach((field, index) => {
-    originalStyles[index] = {
-      backgroundColor: field.style.backgroundColor,
-      outline: field.style.outline,
+  // Add temporary styles for PDF generation
+  const tempStyle = document.createElement("style")
+  tempStyle.textContent = `
+    .button-container { display: none !important; }
+    .page-header { display: none !important; }
+    .school-name, .certificate-title { 
+      color: #d32f2f !important; 
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
-    field.style.backgroundColor = "transparent"
-    field.style.outline = "none"
-  })
-
-  // Add print-specific styles temporarily
-  const printStyle = document.createElement("style")
-  printStyle.textContent = `
-    @media print {
-      body { 
-        margin: 0 !important; 
-        padding: 0 !important; 
-        font-size: 10px !important;
-      }
-      .certificate-container { 
-        transform: scale(0.9) !important; 
-        transform-origin: top left !important;
-        margin: 0 !important;
-        padding: 8px !important;
-      }
-      * { 
-        page-break-inside: avoid !important; 
-        page-break-before: avoid !important;
-        page-break-after: avoid !important;
-      }
+    .tc-info .field-value, .school-code .field-value { 
+      color: #28a745 !important; 
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
   `
-  document.head.appendChild(printStyle)
+  document.head.appendChild(tempStyle)
 
-  // Print
-  window.print()
-
-  // Cleanup after printing
-  setTimeout(() => {
-    // Remove temporary print styles
-    document.head.removeChild(printStyle)
-
-    // Restore original styles
-    editableFields.forEach((field, index) => {
-      field.style.backgroundColor = originalStyles[index].backgroundColor || "#fff3cd"
-      field.style.outline = originalStyles[index].outline || ""
-    })
-  }, 1000)
+  // Generate PDF
+  // Ensure html2pdf is available globally or imported correctly
+  if (window.html2pdf) {
+    window
+      .html2pdf()
+      .set(opt)
+      .from(element)
+      .save()
+      .then(() => {
+        // Reset button and cleanup
+        downloadBtn.textContent = originalText
+        downloadBtn.disabled = false
+        document.head.removeChild(tempStyle)
+      })
+      .catch((error) => {
+        console.error("PDF generation failed:", error)
+        alert("Failed to generate PDF. Please try again.")
+        downloadBtn.textContent = originalText
+        downloadBtn.disabled = false
+        if (document.head.contains(tempStyle)) {
+          document.head.removeChild(tempStyle)
+        }
+      })
+  } else {
+    console.error("html2pdf is not a function. Ensure it is properly loaded.")
+    alert("PDF generation library not found. Please ensure it is properly loaded.")
+    downloadBtn.textContent = originalText
+    downloadBtn.disabled = false
+    if (document.head.contains(tempStyle)) {
+      document.head.removeChild(tempStyle)
+    }
+  }
 }
 
 // Auto-save functionality
@@ -394,16 +295,16 @@ document.addEventListener("DOMContentLoaded", () => {
       certificateManager.exportData()
     }
 
+    // Ctrl+D for download PDF
+    if (e.ctrlKey && e.key === "d") {
+      e.preventDefault()
+      downloadPDF()
+    }
+
     // Ctrl+R for clear (with confirmation)
     if (e.ctrlKey && e.key === "r") {
       e.preventDefault()
       certificateManager.clearAllData()
-    }
-
-    // Ctrl+F for fill sample data
-    if (e.ctrlKey && e.key === "f") {
-      e.preventDefault()
-      certificateManager.fillSampleData()
     }
   })
 
@@ -413,104 +314,4 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.transition = "opacity 0.5s ease"
     document.body.style.opacity = "1"
   }, 100)
-
-  // Add context menu for table cells
-  document.addEventListener("contextmenu", (e) => {
-    if (e.target.closest(".field-cell")) {
-      e.preventDefault()
-      showTableContextMenu(e, e.target.closest(".field-cell"))
-    }
-  })
 })
-
-// Context menu for table cells
-function showTableContextMenu(e, cell) {
-  const contextMenu = document.createElement("div")
-  contextMenu.className = "context-menu"
-  contextMenu.style.cssText = `
-        position: fixed;
-        top: ${e.clientY}px;
-        left: ${e.clientX}px;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 5px 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 1000;
-        font-size: 12px;
-    `
-
-  const editableField = cell.querySelector(".editable")
-  const options = [
-    { text: "Edit Field", action: () => editableField?.focus() },
-    {
-      text: "Clear Field",
-      action: () => {
-        if (editableField) editableField.textContent = ""
-      },
-    },
-    { text: "Copy Text", action: () => navigator.clipboard.writeText(editableField?.textContent || "") },
-    { text: "Validate Field", action: () => validateSingleField(editableField) },
-    { text: "Fill Sample Data", action: () => new CertificateManager().fillSampleData() },
-  ]
-
-  options.forEach((option) => {
-    const item = document.createElement("div")
-    item.textContent = option.text
-    item.style.cssText = "padding: 8px 15px; cursor: pointer; transition: background-color 0.2s;"
-    item.addEventListener("mouseenter", () => (item.style.backgroundColor = "#f0f0f0"))
-    item.addEventListener("mouseleave", () => (item.style.backgroundColor = "transparent"))
-    item.addEventListener("click", () => {
-      option.action()
-      document.body.removeChild(contextMenu)
-    })
-    contextMenu.appendChild(item)
-  })
-
-  document.body.appendChild(contextMenu)
-
-  // Remove context menu when clicking elsewhere
-  setTimeout(() => {
-    document.addEventListener("click", function removeMenu() {
-      if (document.body.contains(contextMenu)) {
-        document.body.removeChild(contextMenu)
-      }
-      document.removeEventListener("click", removeMenu)
-    })
-  }, 100)
-}
-
-// Validate single field
-function validateSingleField(field) {
-  if (!field) return
-
-  const value = field.textContent.trim()
-  const cell = field.closest(".field-cell")
-  const fieldNumber = cell?.querySelector(".field-number")?.textContent || "Field"
-
-  let message = `${fieldNumber}: `
-
-  if (!value || value === "Click to edit") {
-    message += "Empty field"
-  } else if (fieldNumber.includes("Date") && !isValidDate(value)) {
-    message += "Invalid date format"
-  } else if (fieldNumber.includes("No.") && isNaN(value)) {
-    message += "Should be numeric"
-  } else {
-    message += "Valid"
-  }
-
-  alert(message)
-}
-
-// Utility function for date validation
-function isValidDate(dateString) {
-  const dateFormats = [
-    /^\d{2}[-/]\d{2}[-/]\d{4}$/,
-    /^\d{2}[-/][A-Za-z]{3}[-/]\d{4}$/,
-    /^\d{1,2}[-/]\d{1,2}[-/]\d{4}$/,
-    /^\d{2}-[A-Z]{3}-\d{4}$/,
-  ]
-
-  return dateFormats.some((format) => format.test(dateString))
-}
