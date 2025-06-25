@@ -645,14 +645,10 @@ body {
 }
 
 .field-value {
-    display: inline-block;
+    
     /* Allows margin to apply properly */
     margin-top: 5px;
-    /* Controls gap above the value */
-    margin-bottom: 1px;
-    /* Very small gap below the value */
-    line-height: 1.2;
-    /* Tighter line spacing if needed */
+
 }
 
 @media print {
