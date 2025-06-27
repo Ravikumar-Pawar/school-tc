@@ -225,11 +225,10 @@ body {
     margin-top: 15px;
 }
 
-/* Print Button */
+/* Print Button at bottom of scroll */
 .print-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    display: block;
+    margin: 40px auto 0 auto;
     background: #007bff;
     color: white;
     border: none;
@@ -239,7 +238,7 @@ body {
     font-size: 14px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease;
-    z-index: 1000;
+    z-index: 1;
 }
 
 .print-btn:hover {
@@ -261,8 +260,6 @@ body {
         padding: 10px;
     }
 
-
-
     .certificate-table {
         font-size: 11px;
     }
@@ -273,9 +270,8 @@ body {
     }
 
     .print-btn {
-        position: static;
-        margin-bottom: 15px;
         width: 100%;
+        margin: 20px 0;
     }
 
     .page-header {
@@ -340,7 +336,6 @@ body {
         margin-bottom: 4px;
         border-bottom: none !important;
     }
-
 
     .school-address {
         font-size: 13px;
@@ -465,28 +460,4 @@ body {
 
 @page {
     margin: 0.5in 0.44in 0.4in 0.56in;
-
-    @top-left {
-        content: "";
-    }
-
-    @top-center {
-        content: "";
-    }
-
-    @top-right {
-        content: "";
-    }
-
-    @bottom-left {
-        content: "";
-    }
-
-    @bottom-center {
-        content: "";
-    }
-
-    @bottom-right {
-        content: "";
-    }
 }
