@@ -97,7 +97,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 0;
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .certificate-table tr:hover {
@@ -344,7 +344,7 @@ body {
     }
 
     .certificate-table {
-        font-size: 11px;
+        font-size: 10px;
         margin-bottom: 3px;
     }
 
