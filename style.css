@@ -29,7 +29,6 @@ body {
     flex: 0 0 auto;
     text-align: left;
     font-size: 11px;
-
 }
 
 
@@ -66,7 +65,11 @@ body {
 
 .school-code {
     text-align: right;
+    margin-top: -15px;
+    /* Adjust this value as needed */
+    font-weight: bold;
 }
+
 
 /* School Header */
 .school-header {
@@ -84,7 +87,7 @@ body {
 }
 
 .school-name-sub {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bold;
     margin-bottom: 2px;
 }
