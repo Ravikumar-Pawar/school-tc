@@ -13,14 +13,22 @@ class CertificateManager {
 
   // Update timestamp to current date/time
   updateTimestamp() {
-    const now = new Date()
+    const now = new Date();
     const timestamp =
-      now.toLocaleDateString() + ", " + now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    const timestampElement = document.querySelector(".timestamp")
+      now.toLocaleDateString() + ", " +
+      now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      }).toUpperCase(); // Converts AM/PM to uppercase
+
+    const timestampElement = document.querySelector(".timestamp");
     if (timestampElement) {
-      timestampElement.textContent = timestamp
+      timestampElement.textContent = timestamp;
     }
   }
+
+
 
   // Load saved data from localStorage
   loadSavedData() {
