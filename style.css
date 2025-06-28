@@ -483,7 +483,7 @@ body {
     }
 
     @bottom-left {
-        content: "";
+        content: "https://sts.karnataka.gov.in/SATS/sts.htm?str1=29070314301&type=R# 1/";
     }
 
     @bottom-center {
@@ -491,6 +491,6 @@ body {
     }
 
     @bottom-right {
-        content: "";
+        content: "1/1";
     }
 }
