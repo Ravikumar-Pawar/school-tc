@@ -346,13 +346,15 @@ body {
         font-size: 9px;
     }
 
-.school-header {
-    text-align: center;
-    border-bottom: none; /* Remove if not needed */
-    padding-bottom: 0;
-    margin-bottom: 0;
-    line-height: 1.2; /* Tighter line spacing */
-}
+    .school-header {
+        text-align: center;
+        border-bottom: none;
+        /* Remove if not needed */
+        padding-bottom: 0;
+        margin-bottom: 0;
+        line-height: 1.2;
+        /* Tighter line spacing */
+    }
 
     .school-address {
         font-size: 13px;
@@ -509,4 +511,95 @@ body {
     @bottom-right {
         content: "1/1";
     }
+}
+
+
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Box */
+.modal {
+    background: #fff;
+    padding: 30px 25px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: slideUp 0.3s ease-out;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Next Button */
+.next-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.next-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

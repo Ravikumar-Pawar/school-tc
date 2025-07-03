@@ -5,10 +5,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Transfer Certificate</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
+
+
+    <!-- User Info Dialog -->
+<div id="userInfoDialog" class="modal-overlay">
+    <div class="modal">
+        <h2>Let's Get Started</h2>
+        <p>Please enter your details to continue / ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ</p>
+
+        <div class="input-group">
+            <label for="userName">
+                Full Name / ಪೂರ್ಣ ಹೆಸರು
+            </label>
+            <input type="text" id="userName" placeholder="John Doe / ಜಾನ್ ಡೋ" required>
+        </div>
+
+        <div class="input-group">
+            <label for="userPhone">
+                Phone Number / ದೂರವಾಣಿ ಸಂಖ್ಯೆ
+            </label>
+            <input type="tel" id="userPhone" placeholder="+91 9876543210" required>
+        </div>
+
+        <button class="next-btn" onclick="saveUserInfo()">Next / ಮುಂದಕ್ಕೆ</button>
+    </div>
+</div>
+
+
     <div class="timestamp">6/17/25, 9:15 AM</div>
 
     <!-- <div class="page-header">

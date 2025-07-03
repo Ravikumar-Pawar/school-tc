@@ -323,3 +323,60 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.opacity = "1"
   }, 100)
 })
+
+
+
+
+
+
+// ✅ Supabase credentials
+const SUPABASE_URL = 'https://alpvcqrdlwuoeoibrqva.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFscHZjcXJkbHd1b2VvaWJycXZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk1MDEsImV4cCI6MjA2NzA5NTUwMX0.2VBdsRGtvd9xE6PmVpas3CG0bAKTXr0BzgiARGUeTYo'; // full anon key here
+
+
+
+// ✅ Initialize Supabase from CDN
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ✅ Show modal on first visit
+window.onload = function () {
+  const hasUserInfo = localStorage.getItem('userName') && localStorage.getItem('userPhone');
+  if (!hasUserInfo) {
+    document.getElementById('userInfoDialog').style.display = 'flex';
+  }
+};
+
+// ✅ Save user data to Supabase table `userInfo`
+async function saveUserInfo() {
+  const name = document.getElementById('userName').value.trim();
+  const phone = document.getElementById('userPhone').value.trim();
+
+  if (!name || !phone) {
+    alert("Please enter both your name and phone number.");
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase.from('userInfo').insert([
+      {
+        userName: name,
+        phoneNumber: phone
+      }
+    ]);
+
+    if (error) {
+      console.error("Supabase Insert Error:", error);
+      alert("Failed to save. Please try again.");
+    } else {
+      // ✅ Save locally to prevent asking again
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userPhone', phone);
+
+      alert("✅ Your information has been saved!");
+      document.getElementById('userInfoDialog').style.display = 'none';
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    alert("An error occurred.");
+  }
+}
