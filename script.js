@@ -335,10 +335,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 
 
-// ✅ Initialize Supabase from CDN
+// Initialize Supabase from CDN
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ✅ Show modal on first visit
+// Show modal only if user info not already saved
 window.onload = function () {
   const hasUserInfo = localStorage.getItem('userName') && localStorage.getItem('userPhone');
   if (!hasUserInfo) {
@@ -346,7 +346,7 @@ window.onload = function () {
   }
 };
 
-// ✅ Save user data to Supabase table `userInfo`
+// Save user data to Supabase
 async function saveUserInfo() {
   const name = document.getElementById('userName').value.trim();
   const phone = document.getElementById('userPhone').value.trim();
@@ -357,26 +357,19 @@ async function saveUserInfo() {
   }
 
   try {
-    const { data, error } = await supabase.from('userInfo').insert([
-      {
-        userName: name,
-        phoneNumber: phone
-      }
+    const { error } = await supabase.from('userInfo').insert([
+      { userName: name, phoneNumber: phone }
     ]);
 
     if (error) {
       console.error("Supabase Insert Error:", error);
-      alert("Failed to save. Please try again.");
     } else {
-      // ✅ Save locally to prevent asking again
+      // Save locally so modal won't show again
       localStorage.setItem('userName', name);
       localStorage.setItem('userPhone', phone);
-
-      alert("✅ Your information has been saved!");
       document.getElementById('userInfoDialog').style.display = 'none';
     }
   } catch (err) {
     console.error("Unexpected error:", err);
-    alert("An error occurred.");
   }
 }
