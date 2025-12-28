@@ -1,375 +1,210 @@
-// Certificate Management System - Complete Version
-class CertificateManager {
-  constructor() {
-    this.editableFields = document.querySelectorAll(".editable")
-    this.init()
-  }
+(() => {
+  "use strict";
 
-  init() {
-    this.loadSavedData()
-    this.attachEventListeners()
-    this.updateTimestamp()
-  }
+  // --- Print (global if you still call it from HTML somewhere) ---
+  window.printCertificate = function () {
+    window.print();
+  };
 
-  // Update timestamp to current date/time
-  updateTimestamp() {
-    const now = new Date();
-    const timestamp =
-      now.toLocaleDateString() + ", " +
-      now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-      }).toUpperCase(); // Converts AM/PM to uppercase
-
-    const timestampElement = document.querySelector(".timestamp");
-    if (timestampElement) {
-      timestampElement.textContent = timestamp;
-    }
-  }
-
-
-
-  // Load saved data from localStorage
-  loadSavedData() {
-    this.editableFields.forEach((field, index) => {
-      const savedValue = localStorage.getItem(`certificate_field_${index}`)
-      if (savedValue && savedValue !== "Click to edit") {
-        field.textContent = savedValue
-      }
-    })
-  }
-
-  // Save data to localStorage
-  saveFieldData(field, index) {
-    const value = field.textContent.trim()
-    if (value && value !== "Click to edit") {
-      localStorage.setItem(`certificate_field_${index}`, value)
-    }
-  }
-
-  // Attach event listeners to editable fields
-  attachEventListeners() {
-    this.editableFields.forEach((field, index) => {
-      // Save on input
-      field.addEventListener("input", () => {
-        this.saveFieldData(field, index)
-      })
-
-      // Handle focus events
-      field.addEventListener("focus", () => {
-        this.onFieldFocus(field)
-      })
-
-      // Handle blur events
-      field.addEventListener("blur", () => {
-        this.onFieldBlur(field)
-      })
-
-      // Handle keyboard events
-      field.addEventListener("keydown", (e) => {
-        this.handleKeyboardEvents(e, field)
-      })
-    })
-  }
-
-  // Handle field focus
-  onFieldFocus(field) {
-    // Clear placeholder text
-    if (field.textContent === "Click to edit") {
-      field.textContent = ""
+  // ---------------- Certificate Manager ----------------
+  class CertificateManager {
+    constructor() {
+      this.editableFields = document.querySelectorAll(".editable");
+      this.init();
     }
 
-    // Select all text on focus for easy editing
-    if (field.textContent.trim() !== "") {
-      this.selectAllText(field)
-    }
-  }
-
-  // Handle field blur
-  onFieldBlur(field) {
-    // Trim whitespace
-    field.textContent = field.textContent.trim()
-  }
-
-  // Handle keyboard events
-  handleKeyboardEvents(e, field) {
-    // Enter key - move to next field
-    if (e.key === "Enter") {
-      e.preventDefault()
-      this.moveToNextField(field)
+    init() {
+      this.loadSavedData();
+      this.attachEventListeners();
+      this.updateTimestamp();
     }
 
-    // Escape key - blur current field
-    if (e.key === "Escape") {
-      field.blur()
+    updateTimestamp() {
+      const now = new Date();
+      const timestamp =
+        now.toLocaleDateString() + ", " +
+        now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).toUpperCase();
+
+      const el = document.querySelector(".timestamp");
+      if (el) el.textContent = timestamp;
     }
 
-    // Ctrl+A - select all text
-    if (e.ctrlKey && e.key === "a") {
-      e.preventDefault()
-      this.selectAllText(field)
-    }
-  }
-
-  // Select all text in a field
-  selectAllText(field) {
-    const range = document.createRange()
-    range.selectNodeContents(field)
-    const selection = window.getSelection()
-    selection.removeAllRanges()
-    selection.addRange(range)
-  }
-
-  // Move to next editable field
-  moveToNextField(currentField) {
-    const currentIndex = Array.from(this.editableFields).indexOf(currentField)
-    const nextIndex = (currentIndex + 1) % this.editableFields.length
-    this.editableFields[nextIndex].focus()
-  }
-
-  // Clear all data
-  clearAllData() {
-    if (confirm("Are you sure you want to clear all certificate data?")) {
+    loadSavedData() {
       this.editableFields.forEach((field, index) => {
-        field.textContent = ""
-        localStorage.removeItem(`certificate_field_${index}`)
-      })
-    }
-  }
-
-  // Export data as JSON
-  exportData() {
-    const data = {
-      timestamp: document.querySelector(".timestamp")?.textContent,
-      tcNumber: document.querySelector(".tc-info .field-value")?.textContent,
-      academicYear: document.querySelectorAll(".tc-info .field-value")[1]?.textContent,
-      schoolCode: document.querySelector(".school-code .field-value")?.textContent,
-      fields: {},
+        const savedValue = localStorage.getItem(`certificate_field_${index}`);
+        if (savedValue && savedValue !== "Click to edit") field.textContent = savedValue;
+      });
     }
 
-    this.editableFields.forEach((field, index) => {
-      const cell = field.closest(".field-cell")
-      const fieldNumber = cell?.querySelector(".field-number")?.textContent || `Field ${index + 1}`
-      const fieldText = cell?.textContent.split(field.textContent)[0] || `Field ${index + 1}`
+    saveFieldData(field, index) {
+      const value = field.textContent.trim();
+      if (value && value !== "Click to edit") localStorage.setItem(`certificate_field_${index}`, value);
+    }
 
-      data.fields[fieldNumber] = {
-        label: fieldText.replace(fieldNumber, "").trim(),
-        value: field.textContent,
+    attachEventListeners() {
+      this.editableFields.forEach((field, index) => {
+        field.addEventListener("input", () => this.saveFieldData(field, index));
+        field.addEventListener("focus", () => this.onFieldFocus(field));
+        field.addEventListener("blur", () => this.onFieldBlur(field));
+        field.addEventListener("keydown", (e) => this.handleKeyboardEvents(e, field));
+      });
+    }
+
+    onFieldFocus(field) {
+      if (field.textContent === "Click to edit") field.textContent = "";
+      if (field.textContent.trim() !== "") this.selectAllText(field);
+    }
+
+    onFieldBlur(field) {
+      field.textContent = field.textContent.trim();
+    }
+
+    handleKeyboardEvents(e, field) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        this.moveToNextField(field);
       }
-    })
-
-    const dataStr = JSON.stringify(data, null, 2)
-    const dataBlob = new Blob([dataStr], { type: "application/json" })
-
-    const link = document.createElement("a")
-    link.href = URL.createObjectURL(dataBlob)
-    link.download = `certificate_${data.tcNumber || "data"}.json`
-    link.click()
-  }
-}
-
-// Enhanced Print functionality for single page
-function printCertificate() {
-  // Simply trigger the browser's print dialog
-  window.print()
-}
-
-// PDF Download functionality - Simple and reliable
-function downloadPDF() {
-  // Show loading indicator
-  const downloadBtn = document.querySelector(".download-btn")
-  const originalText = downloadBtn.textContent
-  downloadBtn.textContent = "📄 Generating PDF..."
-  downloadBtn.disabled = true
-
-  // Get the certificate container
-  const element = document.querySelector(".certificate-container")
-
-  // Get TC number for filename
-  const tcNumber = document.querySelector(".tc-info .field-value")?.textContent || "certificate"
-
-  // Simple PDF options that work reliably
-  const opt = {
-    margin: [10, 10, 10, 10], // 10mm margins
-    filename: `Transfer_Certificate_${tcNumber.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`,
-    image: {
-      type: "jpeg",
-      quality: 0.98,
-    },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff",
-      logging: false,
-    },
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation: "portrait",
-    },
-  }
-
-  // Add temporary styles for PDF generation
-  const tempStyle = document.createElement("style")
-  tempStyle.textContent = `
-    .button-container { display: none !important; }
-    .page-header { display: none !important; }
-    .school-name, .certificate-title { 
-      color: #d32f2f !important; 
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    .tc-info .field-value, .school-code .field-value { 
-      color: #28a745 !important; 
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-  `
-  document.head.appendChild(tempStyle)
-
-  // Generate PDF
-  // Ensure html2pdf is available globally or imported correctly
-  if (window.html2pdf) {
-    window
-      .html2pdf()
-      .set(opt)
-      .from(element)
-      .save()
-      .then(() => {
-        // Reset button and cleanup
-        downloadBtn.textContent = originalText
-        downloadBtn.disabled = false
-        document.head.removeChild(tempStyle)
-      })
-      .catch((error) => {
-        console.error("PDF generation failed:", error)
-        alert("Failed to generate PDF. Please try again.")
-        downloadBtn.textContent = originalText
-        downloadBtn.disabled = false
-        if (document.head.contains(tempStyle)) {
-          document.head.removeChild(tempStyle)
-        }
-      })
-  } else {
-    console.error("html2pdf is not a function. Ensure it is properly loaded.")
-    alert("PDF generation library not found. Please ensure it is properly loaded.")
-    downloadBtn.textContent = originalText
-    downloadBtn.disabled = false
-    if (document.head.contains(tempStyle)) {
-      document.head.removeChild(tempStyle)
-    }
-  }
-}
-
-// Auto-save functionality
-function setupAutoSave() {
-  setInterval(() => {
-    const editableFields = document.querySelectorAll(".editable")
-    editableFields.forEach((field, index) => {
-      const value = field.textContent.trim()
-      if (value && value !== "Click to edit") {
-        localStorage.setItem(`certificate_field_${index}`, value)
+      if (e.key === "Escape") field.blur();
+      if (e.ctrlKey && (e.key === "a" || e.key === "A")) {
+        e.preventDefault();
+        this.selectAllText(field);
       }
-    })
-  }, 30000) // Auto-save every 30 seconds
-}
-
-// Initialize the application
-document.addEventListener("DOMContentLoaded", () => {
-  // Initialize certificate manager
-  const certificateManager = new CertificateManager()
-
-  // Setup auto-save
-  setupAutoSave()
-
-  // Add keyboard shortcuts
-  document.addEventListener("keydown", (e) => {
-    // Ctrl+P for print
-    if (e.ctrlKey && e.key === "p") {
-      e.preventDefault()
-      printCertificate()
     }
 
-    // Ctrl+S for manual save (already auto-saving)
-    if (e.ctrlKey && e.key === "s") {
-      e.preventDefault()
-      alert("Certificate data is automatically saved!")
+    selectAllText(field) {
+      const range = document.createRange();
+      range.selectNodeContents(field);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
 
-    // Ctrl+E for export
-    if (e.ctrlKey && e.key === "e") {
-      e.preventDefault()
-      certificateManager.exportData()
+    moveToNextField(currentField) {
+      const currentIndex = Array.from(this.editableFields).indexOf(currentField);
+      const nextIndex = (currentIndex + 1) % this.editableFields.length;
+      this.editableFields[nextIndex].focus();
     }
 
-    // Ctrl+D for download PDF
-    if (e.ctrlKey && e.key === "d") {
-      e.preventDefault()
-      downloadPDF()
+    clearAllData() {
+      if (!confirm("Are you sure you want to clear all certificate data?")) return;
+      this.editableFields.forEach((field, index) => {
+        field.textContent = "";
+        localStorage.removeItem(`certificate_field_${index}`);
+      });
     }
 
-    // Ctrl+R for clear (with confirmation)
-    if (e.ctrlKey && e.key === "r") {
-      e.preventDefault()
-      certificateManager.clearAllData()
+    exportData() {
+      const data = {
+        timestamp: document.querySelector(".timestamp")?.textContent || "",
+        academicYear: document.querySelector(".tc-info .field-value")?.textContent || "",
+        schoolCode: document.querySelector(".school-code .field-value")?.textContent || "",
+        fields: {},
+      };
+
+      this.editableFields.forEach((field, index) => {
+        const cell = field.closest(".field-cell");
+        const fieldNumber = cell?.querySelector(".field-number")?.textContent || `Field ${index + 1}`;
+        const label = (cell?.innerText || `Field ${index + 1}`).replace(field.textContent, "").trim();
+
+        data.fields[fieldNumber] = { label, value: field.textContent.trim() };
+      });
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `certificate_export.json`;
+      link.click();
     }
-  })
-
-  // Show loading indicator
-  document.body.style.opacity = "0"
-  setTimeout(() => {
-    document.body.style.transition = "opacity 0.5s ease"
-    document.body.style.opacity = "1"
-  }, 100)
-})
-
-
-
-
-
-
-// ✅ Supabase credentials
-const SUPABASE_URL = 'https://alpvcqrdlwuoeoibrqva.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFscHZjcXJkbHd1b2VvaWJycXZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk1MDEsImV4cCI6MjA2NzA5NTUwMX0.2VBdsRGtvd9xE6PmVpas3CG0bAKTXr0BzgiARGUeTYo'; // full anon key here
-
-
-
-// Initialize Supabase from CDN
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Show modal only if user info not already saved
-window.onload = function () {
-  const hasUserInfo = localStorage.getItem('userName') && localStorage.getItem('userPhone');
-  if (!hasUserInfo) {
-    document.getElementById('userInfoDialog').style.display = 'flex';
-  }
-};
-
-// Save user data to Supabase
-async function saveUserInfo() {
-  const name = document.getElementById('userName').value.trim();
-  const phone = document.getElementById('userPhone').value.trim();
-
-  if (!name || !phone) {
-    alert("Please enter both your name and phone number.");
-    return;
   }
 
-  try {
-    const { error } = await supabase.from('userInfo').insert([
-      { userName: name, phoneNumber: phone }
+  function setupAutoSave() {
+    setInterval(() => {
+      document.querySelectorAll(".editable").forEach((field, index) => {
+        const value = field.textContent.trim();
+        if (value && value !== "Click to edit") localStorage.setItem(`certificate_field_${index}`, value);
+      });
+    }, 30000);
+  }
+
+  // ---------------- Supabase (CDN) ----------------
+  // Avoid name "supabase" for your client to prevent redeclare/conflicts with the global library object. [web:9]
+  const SUPABASE_URL = "https://alpvcqrdlwuoeoibrqva.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFscHZjcXJkbHd1b2VvaWJycXZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTk1MDEsImV4cCI6MjA2NzA5NTUwMX0.2VBdsRGtvd9xE6PmVpas3CG0bAKTXr0BzgiARGUeTYo";
+
+  // Create ONLY ONE client instance for the whole page. [web:8]
+  const { createClient } = window.supabase;
+  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function saveUserInfo() {
+    const name = document.getElementById("userName")?.value.trim();
+    const phone = document.getElementById("userPhone")?.value.trim();
+
+    if (!name || !phone) {
+      alert("Please enter both your name and phone number.");
+      return;
+    }
+
+    const { error } = await supabaseClient.from("userInfo").insert([
+      { userName: name, phoneNumber: phone },
     ]);
 
     if (error) {
       console.error("Supabase Insert Error:", error);
-    } else {
-      // Save locally so modal won't show again
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userPhone', phone);
-      document.getElementById('userInfoDialog').style.display = 'none';
+      alert("Failed to save. Check console for details.");
+      return;
     }
-  } catch (err) {
-    console.error("Unexpected error:", err);
+
+    localStorage.setItem("userName", name);
+    localStorage.setItem("userPhone", phone);
+    const dlg = document.getElementById("userInfoDialog");
+    if (dlg) dlg.style.display = "none";
   }
-}
+
+  function showUserInfoDialogIfNeeded() {
+    const hasUserInfo = localStorage.getItem("userName") && localStorage.getItem("userPhone");
+    const dlg = document.getElementById("userInfoDialog");
+    if (dlg) dlg.style.display = hasUserInfo ? "none" : "flex";
+  }
+
+  // ---------------- App init ----------------
+  document.addEventListener("DOMContentLoaded", () => {
+    // Certificate logic
+    const certificateManager = new CertificateManager();
+    setupAutoSave();
+
+    // Modal logic
+    showUserInfoDialogIfNeeded();
+    document.getElementById("saveUserBtn")?.addEventListener("click", saveUserInfo);
+
+    // Buttons
+    document.getElementById("printBtn")?.addEventListener("click", window.printCertificate);
+
+    // Shortcuts
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && (e.key === "p" || e.key === "P")) {
+        e.preventDefault();
+        window.printCertificate();
+      }
+      if (e.ctrlKey && (e.key === "e" || e.key === "E")) {
+        e.preventDefault();
+        certificateManager.exportData();
+      }
+      if (e.ctrlKey && (e.key === "r" || e.key === "R")) {
+        e.preventDefault();
+        certificateManager.clearAllData();
+      }
+      if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+        e.preventDefault();
+        alert("Certificate data is automatically saved!");
+      }
+    });
+
+    // Fade-in
+    document.body.style.opacity = "0";
+    setTimeout(() => {
+      document.body.style.transition = "opacity 0.5s ease";
+      document.body.style.opacity = "1";
+    }, 100);
+  });
+})();
