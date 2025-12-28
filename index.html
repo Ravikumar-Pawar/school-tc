@@ -1,270 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Transfer Certificate</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>School Transfer Certificate</title>
 
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Load Supabase CDN ONCE (before script.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-
-
-    <!-- User Info Dialog -->
-<div id="userInfoDialog" class="modal-overlay">
+  <!-- User Info Dialog -->
+  <div id="userInfoDialog" class="modal-overlay" style="display:none;">
     <div class="modal">
-        <h2>Let's Get Started</h2>
-        <p>Please enter your details to continue / ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ</p>
+      <h2>Let's Get Started</h2>
+      <p>Please enter your details to continue / ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ</p>
 
-        <div class="input-group">
-            <label for="userName">
-                Full Name / ಪೂರ್ಣ ಹೆಸರು
-            </label>
-            <input type="text" id="userName" placeholder="Enter Your Name" required>
-        </div>
+      <div class="input-group">
+        <label for="userName">Full Name / ಪೂರ್ಣ ಹೆಸರು</label>
+        <input type="text" id="userName" placeholder="Enter Your Name" required />
+      </div>
 
-        <div class="input-group">
-            <label for="userPhone">
-                Phone Number / ದೂರವಾಣಿ ಸಂಖ್ಯೆ
-            </label>
-            <input type="tel" id="userPhone" placeholder="Your Phone Number" required>
-        </div>
+      <div class="input-group">
+        <label for="userPhone">Phone Number / ದೂರವಾಣಿ ಸಂಖ್ಯೆ</label>
+        <input type="tel" id="userPhone" placeholder="Your Phone Number" required />
+      </div>
 
       <button id="saveUserBtn" class="next-btn">Next / ಮುಂದಕ್ಕೆ</button>
     </div>
-</div>
+  </div>
 
+  <div class="timestamp"></div>
 
-    <div class="timestamp">6/17/25, 9:15 AM</div>
-
-    <!-- <div class="page-header">
-        <div class="page-title">STS | Leaving Certificate</div>
-    </div> -->
-
-    <div class="certificate-container">
-        <!-- Header Section -->
-        <div class="header-info">
-            <div class="tc-info">
-                <!-- TC No. : <span class="field-value editable" contenteditable="true">25031025436620</span><br> -->
-                Academic year : <span class="field-value editable" contenteditable="true">2025-2026</span>
-            </div>
-            <div class="school-code">
-                School Code : <span class="field-value editable" contenteditable="true">29070314301</span>
-            </div>
-        </div>
-
-        <!-- School Header -->
-        <div class="school-header">
-            <div class="school-name editable" contenteditable="true">GHPS SHIVAPURI</div>
-            <div class="school-name-sub editable" contenteditable="true">GHPS SHIVAPURI</div>
-            <div class="school-address" contenteditable="false" style="font-weight: bold;">
-                KOPPAL / ಕೊಪ್ಪಳ, KOPPAL / ಕೊಪ್ಪಳ KARNATAKA-
-                <span contenteditable="true">583234</span>
-            </div>
-
-
-            <div class="certificate-title editable" contenteditable="false">SCHOOL TRANSFER CERTIFICATE</div>
-        </div>
-
-        <!-- Main Table -->
-        <table class="certificate-table">
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">1.</span> Admission No. / ಪ್ರವೇಶ ದಾಖಲಾತಿ ಸಂಖ್ಯೆ <br>
-                    <span class="field-value editable" contenteditable="true"></span>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">14.</span> Standard in which the student is studying at the time of
-                    leaving the School /
-                    ಶಾಲೆ ಬಿಡುವಾಗ ವಿದ್ಯಾರ್ಥಿ ಓದುತ್ತಿದ್ದ ತರಗತಿ
-                    <br>
-                    <strong>Class <span class="field-value editable" contenteditable="true">3</span></strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">2.</span> Cumulative Record No. / Enrollment No. /<br>
-                    ಸಂಚಿತ ದಾಖಲಾತಿ ಸಂಖ್ಯೆ<br>
-                    <span class="field-value editable" contenteditable="true">237831658</span>
-                </td>
-                <td class="field-cell" rowspan="2">
-                    <span class="field-number">15.</span> Student opted Subject's / ವಿದ್ಯಾರ್ಥಿ ಆಯ್ಕೆಮಾಡಿದ ವಿಷಯಗಳು<br>
-                    ಸಂದರ್ಭದ ಪ್ರಕಾರ ಬರೆಯಿರಿ<br>
-                    a) Languages Studied / ಅ) ಅಧ್ಯಯನ ಮಾಡಿದ ಭಾಷೆ<br>
-                    <strong><span class="field-value editable" contenteditable="true">KANNADA,
-                            ENGLISH,</span></strong><br>
-                    b) Elective Studied / ಆ) ಅಧ್ಯಯನ ಮಾಡಿದ ಐಚ್ಛಿಕ ವಿಷಯಗಳು<br>
-                    <span class="field-value editable" contenteditable="true"></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">3.</span> Date of Admission To School/ಶಾಲೆಗೆ ದಾಖಲಾದ ದಿನಾಂಕ<br>
-                    <span class="field-value editable" contenteditable="true">05-Jun-2023</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">4.</span> Name of the Student in full / ವಿದ್ಯಾರ್ಥಿಯ ಪೂರ್ಣ ಹೆಸರು<br>
-                    <strong><span class="field-value editable" contenteditable="true">SANGEETA
-                        </span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">16.</span> Medium of Instructions / ಬೋಧನೆಯ ಮಾಧ್ಯಮ<br>
-                    <span class="field-value editable" contenteditable="true">Kannada / ಕನ್ನಡ</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">5.</span> Sex / ಲಿಂಗ<br>
-                    <strong><span class="field-value editable" contenteditable="true">Girl / ಹೆಣ್ಣು</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">17.</span> Whether the Student has paid all the fees due to School ? /
-                    ಶಾಲೆಗೆ ಬಾಕಿ ಇರುವ ಎಲ್ಲಾ ಶುಲ್ಕಗಳನ್ನು ವಿದ್ಯಾರ್ಥಿಯು ಪಾವತಿಸಿದ್ದಾನೆಯೇ?<br>
-                    <span class="field-value editable" contenteditable="false">YES</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">6.</span> Nationality/ರಾಷ್ಟ್ರೀಯತೆ<br>
-                    <strong><span class="field-value editable" contenteditable="false">Indian/ಭಾರತೀಯ</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">18.</span> Fee Concession, if any (Nature and period to be specified) /
-                    ಶುಲ್ಕ ವಿನಾಯಿತಿ ಯಾವುದಾದರೂ ಇದ್ದರೆ (ಸ್ವರೂಪ ಮತ್ತು
-                    ಅವಧಿಯನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಬೇಕು.)<br>
-                    <span class="field-value editable" contenteditable="false">NO</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">7.</span> Religion / ಧರ್ಮ &nbsp;&nbsp; Caste / Caste_kannada<br>
-                    <strong><span class="field-value editable" contenteditable="true">Hindu / ಹಿಂದೂ</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp; <span class="field-value editable" contenteditable="true">Kuruba /
-                            Kuruba</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">19.</span> Scholarship, if any (Nature and period to be specified) /
-                    ವಿದ್ಯಾರ್ಥಿ ವೇತನ ಯಾವುದಾದರೂ ಇದ್ದರೆ (ಸ್ವರೂಪ ಮತ್ತು
-                    ಅವಧಿಯನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಬೇಕು.)<br>
-                    <span class="field-value editable" contenteditable="false">NO</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">8.</span> Name of the Father / ತಂದೆಯ ಹೆಸರು<br>
-                    <strong><span class="field-value editable" contenteditable="true">PRAKASH WALIAKAR</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">20.</span> Whether Medically Examined or not/
-                    ವೈದ್ಯಕೀಯ ಪರೀಕ್ಷೆ ಮಾಡಲಾಗಿದೆಯೇ /ಇಲ್ಲವೇ &nbsp;&nbsp;&nbsp;&nbsp; <strong><span
-                            class="field-value editable" contenteditable="false">YES</span></strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">9.</span> Name of the Mother / ತಾಯಿಯ ಹೆಸರು<br>
-                    <strong><span class="field-value editable" contenteditable="true">NIRMALA</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">21.</span> Month upto which student last attendance at the School /
-                    ಶಾಲೆಗೆ ವಿದ್ಯಾರ್ಥಿಯು ಕೊನೆಯ ಬಾರಿ ಹಾಜರಾದ ತಿಂಗಳು ದಿನಾಂಕ / ತಿಂಗಳು<br>
-                    <span class="field-value editable" contenteditable="true">16-Jun-2025</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">10.</span> Whether the candidate belongs to Schedule Caste or
-                    Schedule Tribe ? /
-                    ವಿದ್ಯಾರ್ಥಿಯು ಪರಿಶಿಷ್ಟ ಜಾತಿ ಅಥವಾ ಪರಿಶಿಷ್ಟ ಪಂಗಡಕ್ಕೆ ಸೇರಿದವನೇ<br>
-                    <strong><span class="field-value editable" contenteditable="true">OBC / ಒಬಿಸಿ Category 2A
-                            /</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">22.</span> Date on which the application for the Transfer Certificate was
-                    received /
-                    ವರ್ಗಾವಣೆ ಪ್ರಮಾಣಪತ್ರಕ್ಕಾಗಿ ಅರ್ಜಿಯನ್ನು ಸ್ವೀಕರಿಸಿದ ದಿನಾಂಕ<br>
-                    <span class="field-value editable" contenteditable="true">16/06/2025</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">11.</span> Whether qualified for promotion to a Higher Standard ? /
-                    ಉನ್ನತ ಶ್ರೇಣಿಗೆ ಬಡ್ತಿ ಪಡೆಯಲು ಅರ್ಹನೇ ? ಬಡ್ತಿ ಪಡೆಯಲು ಅರ್ಹನೇ &nbsp;&nbsp;&nbsp;&nbsp; <strong><span
-                            class="field-value editable" contenteditable="false">NO</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">23.</span> Number of School Days up to the date of leaving in academic
-                    year / ಶೈಕ್ಷಣಿಕ ವರ್ಷದಲ್ಲಿ ಶಾಲೆ ಬಿಡುವ ದಿನಾಂಕದವರೆಗೆ ದಿನಗಳ ಸಂಖ್ಯೆ<br>
-                    <span class="field-value editable" contenteditable="true"></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">12.</span> Student Date of Birth / ವಿದ್ಯಾರ್ಥಿಯ ಹುಟ್ಟಿದ ದಿನಾಂಕ<br>
-                    (ಅಂಕೆಗಳಲ್ಲಿ)<br>
-                    <strong><span class="field-value editable" contenteditable="true">02-JAN-2017</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">24.</span> Number of Total Days the student attended in academic year /
-                    ವಿದ್ಯಾರ್ಥಿಯು ಹಾಜರಾದ ದಿನಗಳ ಸಂಖ್ಯೆ ಶೈಕ್ಷಣಿಕ ದಿನಗಳ ಸಂಖ್ಯೆ<br>
-                    <span class="field-value editable" contenteditable="true"></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="field-cell">
-                    <span class="field-number">13.</span> District / ಜಿಲ್ಲೆ : <strong><span class="field-value editable"
-                            contenteditable="false">KOPPAL</span></strong><br>
-                    Taluka / ತಾಲೂಕು : <strong><span class="field-value editable"
-                            contenteditable="false">Koppal</span></strong><br>
-                    Village / ಗ್ರಾಮ : <strong><span class="field-value editable"
-                            contenteditable="true">Shivapuri</span></strong>
-                </td>
-                <td class="field-cell">
-                    <span class="field-number">25.</span> Character and Conduct / ನಡತೆ ಮತ್ತು ಚಾರಿತ್ರ್ಯ
-                    &nbsp;&nbsp;&nbsp;&nbsp; <strong><span class="field-value editable"
-                            contenteditable="false">Good</span></strong>
-                </td>
-            </tr>
-        </table>
-
-        <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-row">
-                <div class="signature-left">
-                    Date of Entry : <span class="signature-line-small editable" contenteditable="true"></span>
-                </div>
-                <div class="signature-right">
-                    Date of Issue : <span class="signature-line-small editable" contenteditable="true"></span>
-                </div>
-            </div>
-
-            <div class="school-seal">
-                <div class="seal-circle">School Seal</div>
-            </div>
-
-            <div class="signature-row">
-                <div class="signature-left">
-                    Data Entry operator Sign : <span class="signature-line-small editable"
-                        contenteditable="true"></span>
-                </div>
-                <div class="signature-right">
-                    Headmaster Sign : <span class="signature-line-small editable" contenteditable="true"></span>
-                </div>
-            </div>
-
-            <div class="signature-space"></div>
-        </div>
+  <div class="certificate-container">
+    <!-- Header Section -->
+    <div class="header-info">
+      <div class="tc-info">
+        Academic year : <span class="field-value editable" contenteditable="true">2025-2026</span>
+      </div>
+      <div class="school-code">
+        School Code : <span class="field-value editable" contenteditable="true">29070314301</span>
+      </div>
     </div>
 
+    <!-- School Header -->
+    <div class="school-header">
+      <div class="school-name editable" contenteditable="true">GHPS SHIVAPURI</div>
+      <div class="school-name-sub editable" contenteditable="true">GHPS SHIVAPURI</div>
+      <div class="school-address" contenteditable="false" style="font-weight: bold;">
+        KOPPAL / ಕೊಪ್ಪಳ, KOPPAL / ಕೊಪ್ಪಳ KARNATAKA-
+        <span contenteditable="true">583234</span>
+      </div>
+      <div class="certificate-title editable" contenteditable="false">SCHOOL TRANSFER CERTIFICATE</div>
+    </div>
 
-    <button class="print-btn" onclick="printCertificate()">🖨️ Print Certificate</button>
+    <!-- Main Table -->
+    <table class="certificate-table">
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">1.</span> Admission No. / ಪ್ರವೇಶ ದಾಖಲಾತಿ ಸಂಖ್ಯೆ <br />
+          <span class="field-value editable" contenteditable="true"></span>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">14.</span> Standard in which the student is studying at the time of leaving the School /
+          ಶಾಲೆ ಬಿಡುವಾಗ ವಿದ್ಯಾರ್ಥಿ ಓದುತ್ತಿದ್ದ ತರಗತಿ<br />
+          <strong>Class <span class="field-value editable" contenteditable="true">3</span></strong>
+        </td>
+      </tr>
 
-    <script src="script.js"></script>
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">2.</span> Cumulative Record No. / Enrollment No. /<br />
+          ಸಂಚಿತ ದಾಖಲಾತಿ ಸಂಖ್ಯೆ<br />
+          <span class="field-value editable" contenteditable="true">237831658</span>
+        </td>
+        <td class="field-cell" rowspan="2">
+          <span class="field-number">15.</span> Student opted Subject's / ವಿದ್ಯಾರ್ಥಿ ಆಯ್ಕೆಮಾಡಿದ ವಿಷಯಗಳು<br />
+          ಸಂದರ್ಭದ ಪ್ರಕಾರ ಬರೆಯಿರಿ<br />
+          a) Languages Studied / ಅ) ಅಧ್ಯಯನ ಮಾಡಿದ ಭಾಷೆ<br />
+          <strong><span class="field-value editable" contenteditable="true">KANNADA, ENGLISH,</span></strong><br />
+          b) Elective Studied / ಆ) ಅಧ್ಯಯನ ಮಾಡಿದ ಐಚ್ಛಿಕ ವಿಷಯಗಳು<br />
+          <span class="field-value editable" contenteditable="true"></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">3.</span> Date of Admission To School/ಶಾಲೆಗೆ ದಾಖಲಾದ ದಿನಾಂಕ<br />
+          <span class="field-value editable" contenteditable="true">05-Jun-2023</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">4.</span> Name of the Student in full / ವಿದ್ಯಾರ್ಥಿಯ ಪೂರ್ಣ ಹೆಸರು<br />
+          <strong><span class="field-value editable" contenteditable="true">SANGEETA</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">16.</span> Medium of Instructions / ಬೋಧನೆಯ ಮಾಧ್ಯಮ<br />
+          <span class="field-value editable" contenteditable="true">Kannada / ಕನ್ನಡ</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">5.</span> Sex / ಲಿಂಗ<br />
+          <strong><span class="field-value editable" contenteditable="true">Girl / ಹೆಣ್ಣು</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">17.</span> Whether the Student has paid all the fees due to School ? /
+          ಶಾಲೆಗೆ ಬಾಕಿ ಇರುವ ಎಲ್ಲಾ ಶುಲ್ಕಗಳನ್ನು ವಿದ್ಯಾರ್ಥಿಯು ಪಾವತಿಸಿದ್ದಾನೆಯೇ?<br />
+          <span class="field-value editable" contenteditable="false">YES</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">6.</span> Nationality/ರಾಷ್ಟ್ರೀಯತೆ<br />
+          <strong><span class="field-value editable" contenteditable="false">Indian/ಭಾರತೀಯ</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">18.</span> Fee Concession, if any (Nature and period to be specified) /
+          ಶುಲ್ಕ ವಿನಾಯಿತಿ ಯಾವುದಾದರೂ ಇದ್ದರೆ (ಸ್ವರೂಪ ಮತ್ತು ಅವಧಿಯನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಬೇಕು.)<br />
+          <span class="field-value editable" contenteditable="false">NO</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">7.</span> Religion / ಧರ್ಮ &nbsp;&nbsp; Caste / Caste_kannada<br />
+          <strong>
+            <span class="field-value editable" contenteditable="true">Hindu / ಹಿಂದೂ</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="field-value editable" contenteditable="true">Kuruba / Kuruba</span>
+          </strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">19.</span> Scholarship, if any (Nature and period to be specified) /
+          ವಿದ್ಯಾರ್ಥಿ ವೇತನ ಯಾವುದಾದರೂ ಇದ್ದರೆ (ಸ್ವರೂಪ ಮತ್ತು ಅವಧಿಯನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಬೇಕು.)<br />
+          <span class="field-value editable" contenteditable="false">NO</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">8.</span> Name of the Father / ತಂದೆಯ ಹೆಸರು<br />
+          <strong><span class="field-value editable" contenteditable="true">PRAKASH WALIAKAR</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">20.</span> Whether Medically Examined or not/ ವೈದ್ಯಕೀಯ ಪರೀಕ್ಷೆ ಮಾಡಲಾಗಿದೆಯೇ /ಇಲ್ಲವೇ
+          &nbsp;&nbsp;&nbsp;&nbsp; <strong><span class="field-value editable" contenteditable="false">YES</span></strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">9.</span> Name of the Mother / ತಾಯಿಯ ಹೆಸರು<br />
+          <strong><span class="field-value editable" contenteditable="true">NIRMALA</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">21.</span> Month upto which student last attendance at the School /
+          ಶಾಲೆಗೆ ವಿದ್ಯಾರ್ಥಿಯು ಕೊನೆಯ ಬಾರಿ ಹಾಜರಾದ ತಿಂಗಳು ದಿನಾಂಕ / ತಿಂಗಳು<br />
+          <span class="field-value editable" contenteditable="true">16-Jun-2025</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">10.</span> Whether the candidate belongs to Schedule Caste or Schedule Tribe ? /
+          ವಿದ್ಯಾರ್ಥಿಯು ಪರಿಶಿಷ್ಟ ಜಾತಿ ಅಥವಾ ಪರಿಶಿಷ್ಟ ಪಂಗಡಕ್ಕೆ ಸೇರಿದವನೇ<br />
+          <strong><span class="field-value editable" contenteditable="true">OBC / ಒಬಿಸಿ Category 2A /</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">22.</span> Date on which the application for the Transfer Certificate was received /
+          ವರ್ಗಾವಣೆ ಪ್ರಮಾಣಪತ್ರಕ್ಕಾಗಿ ಅರ್ಜಿಯನ್ನು ಸ್ವೀಕರಿಸಿದ ದಿನಾಂಕ<br />
+          <span class="field-value editable" contenteditable="true">16/06/2025</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">11.</span> Whether qualified for promotion to a Higher Standard ? /
+          ಉನ್ನತ ಶ್ರೇಣಿಗೆ ಬಡ್ತಿ ಪಡೆಯಲು ಅರ್ಹನೇ ? &nbsp;&nbsp;&nbsp;&nbsp;
+          <strong><span class="field-value editable" contenteditable="false">NO</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">23.</span> Number of School Days up to the date of leaving in academic year /
+          ಶೈಕ್ಷಣಿಕ ವರ್ಷದಲ್ಲಿ ಶಾಲೆ ಬಿಡುವ ದಿನಾಂಕದವರೆಗೆ ದಿನಗಳ ಸಂಖ್ಯೆ<br />
+          <span class="field-value editable" contenteditable="true"></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">12.</span> Student Date of Birth / ವಿದ್ಯಾರ್ಥಿಯ ಹುಟ್ಟಿದ ದಿನಾಂಕ (ಅಂಕೆಗಳಲ್ಲಿ)<br />
+          <strong><span class="field-value editable" contenteditable="true">02-JAN-2017</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">24.</span> Number of Total Days the student attended in academic year /
+          ವಿದ್ಯಾರ್ಥಿಯು ಹಾಜರಾದ ದಿನಗಳ ಸಂಖ್ಯೆ<br />
+          <span class="field-value editable" contenteditable="true"></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="field-cell">
+          <span class="field-number">13.</span> District / ಜಿಲ್ಲೆ :
+          <strong><span class="field-value editable" contenteditable="false">KOPPAL</span></strong><br />
+          Taluka / ತಾಲೂಕು :
+          <strong><span class="field-value editable" contenteditable="false">Koppal</span></strong><br />
+          Village / ಗ್ರಾಮ :
+          <strong><span class="field-value editable" contenteditable="true">Shivapuri</span></strong>
+        </td>
+        <td class="field-cell">
+          <span class="field-number">25.</span> Character and Conduct / ನಡತೆ ಮತ್ತು ಚಾರಿತ್ರ್ಯ
+          &nbsp;&nbsp;&nbsp;&nbsp; <strong><span class="field-value editable" contenteditable="false">Good</span></strong>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Signature Section -->
+    <div class="signature-section">
+      <div class="signature-row">
+        <div class="signature-left">
+          Date of Entry : <span class="signature-line-small editable" contenteditable="true"></span>
+        </div>
+        <div class="signature-right">
+          Date of Issue : <span class="signature-line-small editable" contenteditable="true"></span>
+        </div>
+      </div>
+
+      <div class="school-seal">
+        <div class="seal-circle">School Seal</div>
+      </div>
+
+      <div class="signature-row">
+        <div class="signature-left">
+          Data Entry operator Sign : <span class="signature-line-small editable" contenteditable="true"></span>
+        </div>
+        <div class="signature-right">
+          Headmaster Sign : <span class="signature-line-small editable" contenteditable="true"></span>
+        </div>
+      </div>
+
+      <div class="signature-space"></div>
+    </div>
+  </div>
+
+  <button class="print-btn" id="printBtn" type="button">🖨️ Print Certificate</button>
+
+  <!-- Load your app script ONCE, at the end of body -->
+  <script src="script.js" defer></script>
 </body>
-
 </html>
